@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-3">Evaluation</h1>
+<p class="text-muted">
+  Correctness target from the project proposal: a published timetable must have
+  <strong>zero hard-constraint violations</strong>. Metrics below are computed live
+  by the validator (multi-period classes occupy every period in their range;
+  combined classes taught together count once).
+</p>
+<div class="row g-3 mb-4">
+  {% for label, value in counts.items %}
+  <div class="col-6 col-md-2">
+    <div class="card text-center"><div class="card-body">
+      <div class="display-6">{{ value }}</div>
+      <div class="text-muted">{{ label }}</div>
+    </div></div>
+  </div>
+  {% endfor %}
+</div>
+<table class="table table-striped align-middle">
+  <thead>
+    <tr><th>Timetable</th><th>Source</th><th>Status</th><th>Classes</th><th>Gen. time (s)</th>
+    <th>Teacher clashes</th><th>Room clashes</th><th>Section clashes</th><th>Capacity/type</th><th>Unavailable</th><th>Total violations</th></tr>
+  </thead>
+  <tbody>
+  {% for row in rows %}
+    <tr>
+      <td><a href="{% url 'scheduler:timetable_detail' row.timetable.pk %}">{{ row.timetable.name }}</a></td>
+      <td>{{ row.timetable.solver_status }}</td>
+      <td>{{ row.timetable.get_status_display }}</td>
+      <td>{{ row.violations.total_entries }}</td>
+      <td>{{ row.timetable.generation_seconds|default:"—" }}</td>
+      <td>{{ row.violations.teacher_clashes }}</td>
+      <td>{{ row.violations.room_clashes }}</td>
+      <td>{{ row.violations.section_clashes }}</td>
+      <td>{{ row.violations.capacity_or_type }}</td>
+      <td>{{ row.violations.teacher_unavailable }}</td>
+      <td><strong>{{ row.hard_total }}</strong></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="text-muted">
+  Note: the imported real-world timetable was produced manually by the department;
+  any violations reported for it are genuine findings about the manual schedule
+  measured against the system's rules (room capacities in the sheet are not
+  recorded, so imported rooms use a default capacity).
+</p>
+{% endblock %}

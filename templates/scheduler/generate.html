@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-3">Generate Timetable</h1>
+<p class="text-muted">
+  The scheduler reads all teachers, courses, rooms, sections, assignments and teacher
+  availability from the database, models them as constraints in OR-Tools CP-SAT, and
+  searches for a timetable with <strong>zero hard-constraint violations</strong>:
+  no teacher, room or section clash, no unavailable-teacher placement, room capacity
+  and lab rules respected, and each assignment's sessions spread across the week.
+</p>
+<form method="post" class="card card-body" style="max-width: 560px;">
+  {% csrf_token %}
+  <label class="form-label" for="name">Timetable name</label>
+  <input class="form-control mb-3" id="name" name="name" placeholder="e.g. Winter 2026 — Generated 1">
+  <button class="btn btn-primary" type="submit">Generate</button>
+</form>
+{% endblock %}

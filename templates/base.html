@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}University Timetable System{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .tt-cell { min-width: 130px; font-size: 0.82rem; vertical-align: top; }
+    .tt-free { background: #f8f9fa; color: #adb5bd; text-align: center; }
+    @media print { .no-print { display: none !important; } }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary no-print">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'scheduler:dashboard' %}">🎓 University Timetable System</a>
+    <div class="navbar-nav">
+      <a class="nav-link" href="{% url 'scheduler:dashboard' %}">Dashboard</a>
+      <a class="nav-link" href="{% url 'scheduler:generate' %}">Generate</a>
+      <a class="nav-link" href="{% url 'scheduler:teacher_portal' %}">Teacher Portal</a>
+      <a class="nav-link" href="{% url 'scheduler:student_portal' %}">Student Portal</a>
+      <a class="nav-link" href="{% url 'scheduler:evaluation' %}">Evaluation</a>
+      <a class="nav-link" href="/admin/">Admin / Data Entry</a>
+    </div>
+  </div>
+</nav>
+<main class="container py-4">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }} no-print">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="container text-muted small pb-4 no-print">
+  Final Year Project — BS Computer Science — Constraint-based scheduling with Google OR-Tools CP-SAT.
+</footer>
+</body>
+</html>

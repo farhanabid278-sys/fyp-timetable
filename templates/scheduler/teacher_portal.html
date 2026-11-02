@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-3">Teacher Portal</h1>
+{% if timetable %}
+<p class="text-muted">Showing the published timetable: <strong>{{ timetable.name }}</strong></p>
+<form method="get" class="row g-2 align-items-end mb-3 no-print">
+  <div class="col-md-5">
+    <label class="form-label" for="teacher">Teacher</label>
+    <select id="teacher" name="teacher" class="form-select" onchange="this.form.submit()">
+      {% for t in teachers %}
+        <option value="{{ t.pk }}" {% if teacher and t.pk == teacher.pk %}selected{% endif %}>{{ t.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-5">
+    <label class="form-label" for="timetable">Timetable</label>
+    <select id="timetable" name="timetable" class="form-select" onchange="this.form.submit()">
+      {% for t in published %}
+        <option value="{{ t.pk }}" {% if timetable and t.pk == timetable.pk %}selected{% endif %}>{{ t.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+{% if teacher %}
+  <h2 class="h5">{{ teacher.name }}</h2>
+  {% include "scheduler/_grid.html" %}
+{% endif %}
+{% else %}
+<p class="text-muted">No published timetable yet. Generate and publish one first.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-1">{{ timetable.name }}</h1>
+<p class="text-muted">{{ timetable.get_status_display }} · Use the browser's Print → Save as PDF to export.</p>
+<button class="btn btn-primary no-print mb-3" onclick="window.print()">🖨️ Print / Save as PDF</button>
+{% for grid in grids %}
+  <h2 class="h5 mt-4">{{ grid.section.name }} — {{ grid.section.get_shift_display }} shift</h2>
+  {% with headers=grid.headers rows=grid.rows %}
+    {% include "scheduler/_grid.html" %}
+  {% endwith %}
+{% endfor %}
+{% endblock %}

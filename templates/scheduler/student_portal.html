@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-3">Student Portal</h1>
+{% if timetable %}
+<p class="text-muted">Showing the published timetable: <strong>{{ timetable.name }}</strong></p>
+<form method="get" class="row g-2 align-items-end mb-3 no-print">
+  <div class="col-md-5">
+    <label class="form-label" for="section">Your section</label>
+    <select id="section" name="section" class="form-select" onchange="this.form.submit()">
+      {% for s in sections %}
+        <option value="{{ s.pk }}" {% if section and s.pk == section.pk %}selected{% endif %}>{{ s.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-5">
+    <label class="form-label" for="timetable">Timetable</label>
+    <select id="timetable" name="timetable" class="form-select" onchange="this.form.submit()">
+      {% for t in published %}
+        <option value="{{ t.pk }}" {% if timetable and t.pk == timetable.pk %}selected{% endif %}>{{ t.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+{% if section %}
+  <h2 class="h5">{{ section.name }} — {{ section.get_shift_display }} shift</h2>
+  {% include "scheduler/_grid.html" %}
+{% endif %}
+{% else %}
+<p class="text-muted">No published timetable yet. Generate and publish one first.</p>
+{% endif %}
+{% endblock %}

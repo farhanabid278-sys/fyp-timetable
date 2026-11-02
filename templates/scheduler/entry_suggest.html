@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-3">Reschedule Suggestions</h1>
+<p>
+  For <strong>{{ entry.assignment.course.code }}</strong> — {{ entry.assignment.section.name }} ·
+  {{ entry.assignment.teacher.name }}<br>
+  Currently: {{ entry.get_day_display }}, {{ entry.start_time }}–{{ entry.end_time }}, Room {{ entry.room.name }}
+</p>
+{% if suggestions %}
+<table class="table table-striped align-middle">
+  <thead><tr><th>Day</th><th>Time</th><th>Room</th><th></th></tr></thead>
+  <tbody>
+  {% for s in suggestions %}
+    <tr>
+      <td>{{ s.day_name }}</td>
+      <td>{{ s.start }}–{{ s.end }}</td>
+      <td>{{ s.room.name }}</td>
+      <td>
+        <form method="post" action="{% url 'scheduler:entry_move' timetable.pk entry.pk %}">
+          {% csrf_token %}
+          <input type="hidden" name="day" value="{{ s.day }}">
+          <input type="hidden" name="period" value="{{ s.period }}">
+          <input type="hidden" name="room" value="{{ s.room.pk }}">
+          <button class="btn btn-sm btn-success" type="submit">Apply</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="text-muted">Every suggestion is checked against the rest of the timetable: no teacher, room or section clash, availability and room rules respected.</p>
+{% else %}
+<p class="text-muted">No clash-free alternative found for this class in the current timetable.</p>
+{% endif %}
+<a class="btn btn-outline-primary" href="{% url 'scheduler:timetable_detail' timetable.pk %}">Back to timetable</a>
+{% endblock %}

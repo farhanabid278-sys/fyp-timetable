@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-3">Move Class</h1>
+<p>
+  <strong>{{ entry.assignment.course.code }}</strong> — {{ entry.assignment.section.name }} ·
+  {{ entry.assignment.teacher.name }}<br>
+  Currently: {{ entry.get_day_display }}, {{ entry.start_time }}–{{ entry.end_time }}, Room {{ entry.room.name }}
+  ({{ entry.periods_count }} period{{ entry.periods_count|pluralize }})
+</p>
+<form method="post" class="card card-body" style="max-width: 560px;">
+  {% csrf_token %}
+  <label class="form-label" for="day">Day</label>
+  <select id="day" name="day" class="form-select mb-3">
+    {% for value, label in days %}
+      <option value="{{ value }}" {% if entry.day == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <label class="form-label" for="period">Start period</label>
+  <select id="period" name="period" class="form-select mb-3">
+    {% for p, start, end in periods %}
+      <option value="{{ p }}" {% if entry.period == p %}selected{% endif %}>P{{ p }} — {{ start }}–{{ end }}</option>
+    {% endfor %}
+  </select>
+  <label class="form-label" for="room">Room</label>
+  <select id="room" name="room" class="form-select mb-3">
+    {% for r in rooms %}
+      <option value="{{ r.pk }}" {% if entry.room_id == r.pk %}selected{% endif %}>{{ r.name }} ({{ r.get_room_type_display }}, {{ r.capacity }})</option>
+    {% endfor %}
+  </select>
+  <div class="d-flex gap-2">
+    <button class="btn btn-primary" type="submit">Move class</button>
+    <a class="btn btn-outline-secondary" href="{% url 'scheduler:entry_suggest' timetable.pk entry.pk %}">See clash-free suggestions</a>
+  </div>
+  <p class="text-muted mt-2 mb-0">The move is only saved if it creates no teacher, room or section clash and respects availability and room rules.</p>
+</form>
+{% endblock %}

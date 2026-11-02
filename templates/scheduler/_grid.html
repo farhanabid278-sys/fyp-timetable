@@ -1,0 +1,34 @@
+<div class="table-responsive">
+<table class="table table-bordered">
+  <thead class="table-light">
+    <tr>
+      <th>Day</th>
+      {% for p, start, end in headers %}
+        <th class="tt-cell">P{{ p }}<br><small>{{ start }}–{{ end }}</small></th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for row in rows %}
+    <tr>
+      <th class="table-light">{{ row.day }}</th>
+      {% for entry in row.cells %}
+        {% if entry == "CONT" %}
+          <td class="tt-cell tt-free">↳ continues</td>
+        {% elif entry %}
+          <td class="tt-cell">
+            <strong>{{ entry.assignment.course.code }}</strong><br>
+            {{ entry.assignment.section.name }}<br>
+            {{ entry.assignment.teacher.name }}<br>
+            Room: {{ entry.room.name }}
+            {% if entry.periods_count > 1 %}<br><span class="badge bg-info text-dark">{{ entry.periods_count }} periods</span>{% endif %}
+          </td>
+        {% else %}
+          <td class="tt-cell tt-free">— free —</td>
+        {% endif %}
+      {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
